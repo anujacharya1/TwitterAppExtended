@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:padding="0.5dp"
+    android:background="#E0E0E0"
+    android:layout_height="match_parent"
+    android:layout_below="@+id/my_toolbar">
+
+    <ImageView
+        android:layout_width="70dp"
+        android:layout_height="130dp"
+        android:paddingTop="5dp"
+        android:id="@+id/usrImg"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:background="#FFFFFF"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:scaleType="fitStart"
+        />
+
+    <com.anuj.twitter.LinkifyTextView
+        android:layout_width="match_parent"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:layout_height="match_parent"
+        android:text="tweet"
+        android:id="@+id/tvTweet"
+        android:layout_toRightOf="@+id/usrImg"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/tvUsername"
+        android:background="#FFFFFF"
+        android:fontFamily="sans-serif-light"
+        android:autoLink="all"
+        android:linksClickable="true"
+        android:layout_alignBottom="@+id/usrImg" />
+
+    <TextView
+        android:padding="5dp"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="username"
+        android:id="@+id/tvUsername"
+        android:layout_alignParentTop="true"
+        android:background="#FFFFFF"
+        android:fontFamily="sans-serif-light"
+        android:layout_toRightOf="@+id/usrImg"
+        />
+
+    <TextView
+        android:padding="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="date"
+        android:id="@+id/tvDate"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_above="@+id/tvTweet"
+        android:gravity="end"
+        android:layout_toRightOf="@+id/tvUsername"
+        android:layout_toEndOf="@+id/tvUsername"
+        android:fontFamily="sans-serif-light"
+        android:background="#FFFFFF" />
+
+</RelativeLayout>

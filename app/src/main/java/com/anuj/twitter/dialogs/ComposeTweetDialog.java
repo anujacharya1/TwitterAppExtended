@@ -1,7 +1,6 @@
 package com.anuj.twitter.dialogs;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.text.InputFilter;
 import android.view.LayoutInflater;
@@ -27,7 +26,6 @@ public class ComposeTweetDialog extends DialogFragment {
     EditText etTweet;
 
     public static String TAG = "TWEET_DIALOG";
-    final int MAX_LENGTH = 140;
 
     ComposeTweetDialogListner composeTweetDialogListner;
 

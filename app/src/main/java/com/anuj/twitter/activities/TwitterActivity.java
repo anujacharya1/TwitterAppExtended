@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Parcel;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
@@ -26,11 +27,13 @@ import com.anuj.twitter.R;
 import com.anuj.twitter.TwitterApplication;
 import com.anuj.twitter.TwitterClient;
 import com.anuj.twitter.adapters.EndlessRecyclerViewScrollListener;
-import com.anuj.twitter.adapters.SampleFragmentPagerAdapter;
 import com.anuj.twitter.adapters.TwitterTimelineAdapter;
 import com.anuj.twitter.dao.TimelineDO;
 import com.anuj.twitter.dao.UserDO;
 import com.anuj.twitter.dialogs.ComposeTweetDialog;
+import com.anuj.twitter.fragments.MentionFragment;
+import com.anuj.twitter.fragments.PageFragment;
+import com.anuj.twitter.fragments.SmartFragmentStatePagerAdapter;
 import com.anuj.twitter.models.Timeline;
 import com.anuj.twitter.models.User;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -51,6 +54,53 @@ import android.text.Editable;
 import android.text.TextWatcher;
 
 public class TwitterActivity extends AppCompatActivity {
+
+
+    private SmartFragmentStatePagerAdapter adapterViewPager;
+    ViewPager viewPager;
+
+    public static class MyPagerAdapter extends SmartFragmentStatePagerAdapter {
+        private static int NUM_ITEMS = 2;
+
+        public MyPagerAdapter(FragmentManager fragmentManager) {
+            super(fragmentManager);
+        }
+
+        // Returns total number of pages
+        @Override
+        public int getCount() {
+            return NUM_ITEMS;
+        }
+
+        // Returns the fragment to display for that page
+        @Override
+        public Fragment getItem(int position) {
+            switch (position) {
+                case 0:
+                    return PageFragment.newInstance(0);
+                case 1:
+                    return MentionFragment.newInstance(0);
+
+                default:
+                    return null;
+            }
+        }
+
+        // Returns the page title for the top indicator
+        @Override
+        public CharSequence getPageTitle(int position) {
+            if(position == 0){
+                return "@Home";
+            }
+            else if(position == 1){
+                return "@Mention";
+            }
+            else{
+                return "Page " + position;
+            }
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,13 +110,14 @@ public class TwitterActivity extends AppCompatActivity {
         setToolbar();
         setupTheFrangment();
 
+        System.out.println("");
     }
 
     private void setupTheFrangment(){
         // Get the ViewPager and set it's PagerAdapter so that it can display items
-        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
-        viewPager.setAdapter(new SampleFragmentPagerAdapter(getSupportFragmentManager(),
-                TwitterActivity.this));
+        viewPager = (ViewPager) findViewById(R.id.viewpager);
+        adapterViewPager = new MyPagerAdapter(getSupportFragmentManager());
+        viewPager.setAdapter(adapterViewPager);
 
         // Give the TabLayout the ViewPager
         TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
@@ -83,17 +134,12 @@ public class TwitterActivity extends AppCompatActivity {
         DialogFragment newFragment = ComposeTweetDialog.newInstance(new ComposeTweetDialog.ComposeTweetDialogListner() {
             @Override
             public void onTweet(String text) {
+                if (text != null && !text.isEmpty()) {
+                    Fragment f = adapterViewPager.getRegisteredFragment(0);
+                    PageFragment pageFragment = (PageFragment) adapterViewPager.getRegisteredFragment(viewPager.getCurrentItem());
 
-                // got the value from the dialog
-                // put in the list view and refresh the adapter
-                // populate the listview if the text is not empty
-                // TODO: How to handle this now ?
-                // on the compose tweet send this data to frangment
-                // how to do this ?
-//                if (text != null && !text.isEmpty()) {
-//                    postTheUserTweetOnTheList(text);
-//                }
-
+                    pageFragment.postTheUserTweetOnTheList(text);
+                }
             }
         });
         newFragment.show(ft, "TWEET_DIALOG");

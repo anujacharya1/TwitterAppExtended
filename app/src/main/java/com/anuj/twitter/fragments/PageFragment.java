@@ -45,7 +45,10 @@ import butterknife.ButterKnife;
  * Created by anujacharya on 2/23/16.
  */
 public class PageFragment extends Fragment {
-    public static final String ARG_PAGE = "ARG_PAGE";
+
+    public static final String TIMELINE_PAGE = "TIMELINE_PAGE";
+    public static final String COMPOSED_TIMELINE = "COMPOSED_TIMELINE";
+
 
     private int mPage;
 
@@ -57,6 +60,9 @@ public class PageFragment extends Fragment {
     LinearLayoutManager linearLayoutManager;
 
     List<Timeline> timelines;
+
+    //this is the one composed from the tweet dialog
+    Timeline timeline;
 
     TwitterTimelineAdapter twitterTimelineAdapter;
     private android.support.v4.widget.SwipeRefreshLayout swipeContainer;
@@ -70,29 +76,37 @@ public class PageFragment extends Fragment {
 
     public static PageFragment newInstance(int page) {
         Bundle args = new Bundle();
-        args.putInt(ARG_PAGE, page);
+        args.putInt(TIMELINE_PAGE, page);
         PageFragment fragment = new PageFragment();
         fragment.setArguments(args);
         return fragment;
     }
 
+
+    public static PageFragment newInstance(int page, Timeline timeline) {
+        Bundle args = new Bundle();
+        args.putInt(TIMELINE_PAGE, page);
+        args.putSerializable(COMPOSED_TIMELINE, timeline);
+        PageFragment fragment = new PageFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mPage = getArguments().getInt(ARG_PAGE);
+        mPage = getArguments().getInt(TIMELINE_PAGE);
+        timeline = (Timeline)getArguments().getSerializable(COMPOSED_TIMELINE);
+        if(timeline!=null){
+            Log.i("INFO", "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+        }
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-        Log.i("INFO", "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-//        View view = inflater.inflate(R.layout.fragment_test, container, false);
-//
-//        TextView textView = (TextView) view;
-//        textView.setText("Fragment #" + mPage);
-//        return view;
-
 
 
         View view = inflater.inflate(R.layout.fragment_home, container, false);
@@ -270,7 +284,7 @@ public class PageFragment extends Fragment {
         }, sinceId, max_id);
     }
 
-    private void postTheUserTweetOnTheList(String tweet){
+    public void postTheUserTweetOnTheList(String tweet){
         twitterClient.postTweet(new JsonHttpResponseHandler() {
 
             @Override

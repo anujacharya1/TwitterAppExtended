@@ -11,6 +11,7 @@ import com.google.gson.annotations.SerializedName;
 import org.json.JSONArray;
 import org.parceler.Parcel;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +20,7 @@ import java.util.List;
  */
 
 @Parcel
-public class Timeline {
+public class Timeline implements Serializable {
 
     Long id;
 

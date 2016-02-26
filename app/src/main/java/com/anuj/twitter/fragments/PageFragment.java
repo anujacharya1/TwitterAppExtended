@@ -82,17 +82,6 @@ public class PageFragment extends Fragment {
         return fragment;
     }
 
-
-    public static PageFragment newInstance(int page, Timeline timeline) {
-        Bundle args = new Bundle();
-        args.putInt(TIMELINE_PAGE, page);
-        args.putSerializable(COMPOSED_TIMELINE, timeline);
-        PageFragment fragment = new PageFragment();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

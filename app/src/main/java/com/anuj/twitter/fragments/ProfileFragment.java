@@ -127,9 +127,21 @@ public class ProfileFragment extends Fragment {
         tvDetailScreenName.setText(Html.fromHtml("<font size='0.2' color='#9E9E9E'>" +
                 "@" + user.getScreenName() + "</font>"));
 
+        String followersStr = user.getFollowers_count();
+        String followingStr = user.getFriends_count();
 
-        tvfollowers.setText(user.getFollowers_count() == null ? "0" : TwitterUtils.coolFormat(Long.valueOf(user.getFollowers_count()), 0) + " Followers");
-        tvfollowing.setText(user.getFriends_count() == null ? "0" : TwitterUtils.coolFormat(Long.valueOf(user.getFriends_count()),0) + " Following");
+        Long followers = Long.valueOf(followersStr);
+        Long following = Long.valueOf(followingStr);
+
+        if(followers>=1000){
+            followersStr =  TwitterUtils.coolFormat(followers,0);
+        }
+        if(following >=1000){
+            followingStr =  TwitterUtils.coolFormat(following,0);
+        }
+
+        tvfollowers.setText(user.getFollowers_count() == null ? "0" : followersStr + " Followers");
+        tvfollowing.setText(user.getFriends_count() == null ? "0" : followingStr + " Following");
 
         //profile image
         Glide.with(getContext())
@@ -194,7 +206,7 @@ public class ProfileFragment extends Fragment {
                     Log.i("INFO", "timelines= " + timelineList.toString());
                     //if maxId is null i.e the first time we call add all the result to the list
 
-                    if(maxId==null && user==null){
+                    if (maxId == null && user == null) {
                         // this is the case when we are not passing the user
                         // i.e when the user us clicking it;s own profile button
                         // TODO: what if the user does not have any tweet posted ? well I don't know
@@ -240,7 +252,7 @@ public class ProfileFragment extends Fragment {
                 throwable.printStackTrace();
                 Log.e("ERROR", "GOT THE ERROR FROM THE TWITTER");
             }
-        }, sinceId, max_id, user!=null?String.valueOf(user.getId()):null);
+        }, sinceId, max_id, user != null ? String.valueOf(user.getId()) : null);
     }
 
     public static ProfileFragment newInstance(User user) {

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -85,9 +86,7 @@ public class TwitterTimelineAdapter extends RecyclerView.Adapter<TwitterTimeline
         //profile image
         Glide.with(context)
                 .load(user.getProfileImg())
-                .into(holder.userTweetImg)
-                ;
-
+                .into(holder.userTweetImg);
     }
 
     public static Date getTwitterDate(String date) {
@@ -114,12 +113,13 @@ public class TwitterTimelineAdapter extends RecyclerView.Adapter<TwitterTimeline
     // Define the listener interface
     public interface OnItemClickListener {
         void onItemClick(View itemView, int position);
+        void onProfilePicClicked(View itemView, int position);
     }
     // Define the method that allows the parent activity or fragment to define the listener
     public void setOnItemClickListener(OnItemClickListener listener) {
+        Log.i("INFO", "LISTENER"+listener.getClass().toString());
         this.listener = listener;
     }
-
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -131,6 +131,7 @@ public class TwitterTimelineAdapter extends RecyclerView.Adapter<TwitterTimeline
         @Bind(R.id.tvUsername)
         TextView username;
 
+
         public ViewHolder(final View itemView) {
             super(itemView);
 
@@ -139,11 +140,22 @@ public class TwitterTimelineAdapter extends RecyclerView.Adapter<TwitterTimeline
             // bind the item view
             ButterKnife.bind(this, itemView);
 
+            userTweetImg.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.i("INFO", "++++++++++++++++++++++++++++++++++++++++++++++++");
+                    if (listener != null)
+                        listener.onProfilePicClicked(itemView, getLayoutPosition());
+                }
+            });
+
             // Setup the click listener
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     // Triggers click upwards to the adapter on click
+                    Log.i("INFO", "----------------------------------------------------");
+
                     if (listener != null)
                         listener.onItemClick(itemView, getLayoutPosition());
                 }

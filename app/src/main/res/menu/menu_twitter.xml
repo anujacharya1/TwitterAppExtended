@@ -10,4 +10,11 @@
         app:showAsAction="ifRoom"
         />
 
+    <item
+        android:id="@+id/action_profile"
+        android:icon="@drawable/profile_icon"
+        android:title="filter"
+        app:showAsAction="ifRoom"
+        />
+
 </menu>

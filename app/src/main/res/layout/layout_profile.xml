@@ -1,0 +1,78 @@
+<android.support.percent.PercentRelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent" android:layout_height="wrap_content"
+    android:padding="10px"
+        android:id="@+id/llprofile">
+
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:id="@+id/ivDetailProfilePic" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="username"
+            android:id="@+id/tvDetailUsername"
+            android:textStyle="bold"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/ivDetailProfilePic"
+            android:layout_toEndOf="@+id/ivDetailProfilePic"
+            android:fontFamily="sans-serif-light"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="screenname"
+            android:id="@+id/tvDetailScreenName"
+            android:textStyle="bold"
+            android:layout_toRightOf="@+id/ivDetailProfilePic"
+            android:layout_below="@+id/tvDetailUsername"
+            android:fontFamily="sans-serif-light"
+            />
+
+        <TextView
+        android:layout_below="@+id/ivDetailProfilePic"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:text="Followers"
+        android:gravity="center"
+        android:id="@+id/tvfollowers"
+        android:textStyle="bold"
+        android:fontFamily="sans-serif-light"
+            android:allowUndo="true" />
+
+        <TextView
+            android:layout_below="@+id/ivDetailProfilePic"
+            android:layout_toRightOf="@+id/tvfollowers"
+            android:paddingLeft="50dp"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:text="Following"
+            android:gravity="center"
+            android:id="@+id/tvfollowing"
+            android:textStyle="bold"
+            android:fontFamily="sans-serif-light" />
+
+
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/srlProfile"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/tvfollowing">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rvProfile"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#FFFFFF"
+            />
+
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+
+
+</android.support.percent.PercentRelativeLayout>

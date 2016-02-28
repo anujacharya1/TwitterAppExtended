@@ -4,11 +4,13 @@ import com.google.gson.annotations.SerializedName;
 
 import org.parceler.Parcel;
 
+import java.io.Serializable;
+
 /**
  * Created by anujacharya on 2/15/16.
  */
 @Parcel
-public class User {
+public class User implements Serializable{
 
     Long id;
 
@@ -19,6 +21,28 @@ public class User {
 
     @SerializedName("screen_name")
     private String screenName;
+
+    @SerializedName("friends_count")
+    private String friends_count;
+
+    @SerializedName("followers_count")
+    private String followers_count;
+
+    public String getFriends_count() {
+        return friends_count;
+    }
+
+    public void setFriends_count(String friends_count) {
+        this.friends_count = friends_count;
+    }
+
+    public String getFollowers_count() {
+        return followers_count;
+    }
+
+    public void setFollowers_count(String followers_count) {
+        this.followers_count = followers_count;
+    }
 
     public String getScreenName() {
         return screenName;
@@ -55,10 +79,12 @@ public class User {
     @Override
     public String toString() {
         return "User{" +
-                "id='" + id + '\'' +
-                "name='" + name + '\'' +
+                "id=" + id +
+                ", name='" + name + '\'' +
                 ", profileImg='" + profileImg + '\'' +
                 ", screenName='" + screenName + '\'' +
+                ", friends_count='" + friends_count + '\'' +
+                ", followers_count='" + followers_count + '\'' +
                 '}';
     }
 }

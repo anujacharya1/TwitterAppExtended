@@ -18,7 +18,8 @@ public class DBHelper {
 
     public static void save(Timeline timeline){
         User user = timeline.getUser();
-        UserDO userDO = new UserDO(user.getId(), user.getName(), user.getProfileImg(),user.getScreenName() );
+        UserDO userDO = new UserDO(user.getId(), user.getName(), user.getProfileImg(),
+                            user.getScreenName(), user.getFollowers_count(), user.getFriends_count() );
         userDO.save();
 
         TimelineDO timelineDO = new TimelineDO(timeline.getId(), userDO, timeline.getText(), timeline.getCreatedAt() );

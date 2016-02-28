@@ -25,6 +25,28 @@ public class UserDO extends Model {
     @Column(name = "screen_name")
     private String screenName;
 
+    @Column(name = "followers_count")
+    private String followers_count;
+
+    @Column(name = "friends_count")
+    private String friends_count;
+
+    public String getFollowers_count() {
+        return followers_count;
+    }
+
+    public void setFollowers_count(String followers_count) {
+        this.followers_count = followers_count;
+    }
+
+    public String getFriends_count() {
+        return friends_count;
+    }
+
+    public void setFriends_count(String friends_count) {
+        this.friends_count = friends_count;
+    }
+
     public String getName() {
         return name;
     }
@@ -61,22 +83,25 @@ public class UserDO extends Model {
         super();
     }
 
-    public UserDO(Long id, String name, String profileImg, String screenName) {
+    public UserDO(Long id, String name, String profileImg, String screenName, String followers_count, String friends_count) {
         super();
         this._id = id;
         this.name = name;
         this.profileImg = profileImg;
         this.screenName = screenName;
+        this.followers_count = followers_count;
+        this.friends_count = friends_count;
     }
 
     @Override
     public String toString() {
         return "UserDO{" +
-                "mId=" +super.getId() +
                 "_id=" + _id +
                 ", name='" + name + '\'' +
                 ", profileImg='" + profileImg + '\'' +
                 ", screenName='" + screenName + '\'' +
+                ", followers_count='" + followers_count + '\'' +
+                ", friends_count='" + friends_count + '\'' +
                 '}';
     }
 }

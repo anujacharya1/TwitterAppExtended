@@ -1,5 +1,6 @@
 package com.anuj.twitter.fragments;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -17,9 +18,11 @@ import com.anuj.twitter.TwitterApplication;
 import com.anuj.twitter.TwitterClient;
 import com.anuj.twitter.activities.TweetDetailActivity;
 import com.anuj.twitter.adapters.EndlessRecyclerViewScrollListener;
+import com.anuj.twitter.adapters.MentionTimelineAdapter;
 import com.anuj.twitter.adapters.TwitterTimelineAdapter;
 import com.anuj.twitter.dao.TimelineDO;
 import com.anuj.twitter.models.Timeline;
+import com.anuj.twitter.models.User;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.apache.http.Header;
@@ -27,6 +30,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.parceler.Parcels;
 
+import java.sql.Time;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -44,14 +48,14 @@ public class MentionFragment extends Fragment {
 
     TwitterClient twitterClient;
 
-    @Bind(R.id.rvTimeline)
+    @Bind(R.id.rvMention)
     public RecyclerView timeLineRecycleView;
 
     LinearLayoutManager linearLayoutManager;
 
     List<Timeline> timelines;
 
-    TwitterTimelineAdapter twitterTimelineAdapter;
+    MentionTimelineAdapter mentionTimelineAdapter;
     private android.support.v4.widget.SwipeRefreshLayout swipeContainer;
 
     private int sinceId = 0;
@@ -69,7 +73,7 @@ public class MentionFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_home, container, false);
+        View view = inflater.inflate(R.layout.fragment_mention, container, false);
         ButterKnife.bind(this, view);
 
         //set the singleton client
@@ -80,7 +84,6 @@ public class MentionFragment extends Fragment {
 
         setupTheTimelineAdapter();
 
-
         //Step1: try to get the data from database
 
         //attach the adapter to the listView
@@ -89,7 +92,7 @@ public class MentionFragment extends Fragment {
         populateMentionTimeline(1, max_id);
 
         // Lookup the swipe container view
-        swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
+        swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.srlMention);
         // Setup refresh listener which triggers new data loading
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -98,14 +101,13 @@ public class MentionFragment extends Fragment {
                 //set the maxId to zero
                 max_id = null;
                 timelines.clear(); //clear list
-                twitterTimelineAdapter.notifyDataSetChanged();
+                mentionTimelineAdapter.notifyDataSetChanged();
                 populateMentionTimeline(1, max_id);
             }
         });
 
         return view;
     }
-
 
     private void setupTheTimelineAdapter(){
 
@@ -116,17 +118,20 @@ public class MentionFragment extends Fragment {
         timeLineRecycleView.setLayoutManager(linearLayoutManager);
 
         timelines = new LinkedList<>();
-        twitterTimelineAdapter = new TwitterTimelineAdapter(timelines);
+        mentionTimelineAdapter = new MentionTimelineAdapter(timelines);
 
-        twitterTimelineAdapter.setOnItemClickListener(new TwitterTimelineAdapter.OnItemClickListener() {
+        mentionTimelineAdapter.setOnItemClickListener(new MentionTimelineAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
+                Log.i("INFO", "MentionFragment twitterTimelineAdapter.setOnItemClickListener.onItemClick");
+
                 Timeline timeline = timelines.get(position);
 
                 Intent i = new Intent(getActivity(), TweetDetailActivity.class);
                 i.putExtra("timeline", Parcels.wrap(timeline));
                 startActivity(i);
             }
+
         });
 
         //end less scroller
@@ -147,7 +152,7 @@ public class MentionFragment extends Fragment {
         });
 
         // give our custom adapter to the recycler view
-        timeLineRecycleView.setAdapter(twitterTimelineAdapter);
+        timeLineRecycleView.setAdapter(mentionTimelineAdapter);
     }
 
     private void populateMentionTimeline(int sinceId, final Long maxId){
@@ -179,11 +184,8 @@ public class MentionFragment extends Fragment {
                         timelines.addAll(timelineList);
                     }
 
-//                    List<TimelineDO> timelineDOs = DBHelper.getAllInDescOfDate();
-//                    Log.i("INFO", "Stored in database count = " + timelineDOs.size());
-
-                    int curSize = twitterTimelineAdapter.getItemCount();
-                    twitterTimelineAdapter.notifyItemRangeInserted(curSize, timelines.size() - 1);
+                    int curSize = mentionTimelineAdapter.getItemCount();
+                    mentionTimelineAdapter.notifyItemRangeInserted(curSize, timelines.size() - 1);
 
                     swipeContainer.setRefreshing(false);
                 } else {
@@ -200,8 +202,6 @@ public class MentionFragment extends Fragment {
             }
         }, sinceId, max_id);
     }
-
-
 
     public static MentionFragment newInstance(int page) {
         Bundle args = new Bundle();

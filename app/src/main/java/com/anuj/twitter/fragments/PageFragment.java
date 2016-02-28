@@ -1,5 +1,7 @@
 package com.anuj.twitter.fragments;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -13,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.TextView;
 
 import com.activeandroid.ActiveAndroid;
@@ -48,8 +51,6 @@ public class PageFragment extends Fragment {
 
     public static final String TIMELINE_PAGE = "TIMELINE_PAGE";
     public static final String COMPOSED_TIMELINE = "COMPOSED_TIMELINE";
-
-
     private int mPage;
 
     TwitterClient twitterClient;
@@ -87,10 +88,6 @@ public class PageFragment extends Fragment {
         super.onCreate(savedInstanceState);
         mPage = getArguments().getInt(TIMELINE_PAGE);
         timeline = (Timeline)getArguments().getSerializable(COMPOSED_TIMELINE);
-        if(timeline!=null){
-            Log.i("INFO", "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-        }
-
     }
 
     @Override
@@ -99,8 +96,6 @@ public class PageFragment extends Fragment {
 
 
         View view = inflater.inflate(R.layout.fragment_home, container, false);
-//        TextView textView = (TextView) view;
-//        textView.setText("Fragment #" + mPage);
         ButterKnife.bind(this, view);
 
         //set the singleton client
@@ -162,6 +157,9 @@ public class PageFragment extends Fragment {
             timeline.setText(timelineDO.getText());
 
             User user = new User();
+            user.setId(userDO.get_id());
+            user.setFollowers_count(userDO.getFollowers_count());
+            user.setFriends_count(userDO.getFriends_count());
             user.setScreenName(userDO.getScreenName());
             user.setName(userDO.getName());
             user.setProfileImg(userDO.getProfileImg());
@@ -190,11 +188,23 @@ public class PageFragment extends Fragment {
         twitterTimelineAdapter.setOnItemClickListener(new TwitterTimelineAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
+                Log.i("INFO", "Page fragment twitterTimelineAdapter.setOnItemClickListener.onItemClick");
                 Timeline timeline = timelines.get(position);
 
                 Intent i = new Intent(getActivity(), TweetDetailActivity.class);
                 i.putExtra("timeline", Parcels.wrap(timeline));
                 startActivity(i);
+            }
+
+            @Override
+            public void onProfilePicClicked(View itemView, int position) {
+                Log.i("INFO", "Page fragment twitterTimelineAdapter.setOnItemClickListener.onProfilePicClicked");
+
+                // pass the argument to the parent activity which is TwitterActivity to notify that
+                // profile pic is clicked and you Activity will forward to abother frangment
+                Timeline timeline = timelines.get(position);
+                listener.onProfilePicClicked(timeline.getUser());
+
             }
         });
 
@@ -317,5 +327,29 @@ public class PageFragment extends Fragment {
             ActiveAndroid.endTransaction();
         }
 
+    }
+
+    /**
+     * LISTNERS
+     *
+     */
+    private OnItemSelectedListener listener;
+
+    // Define the events that the fragment will use to communicate
+    public interface OnItemSelectedListener {
+        // This can be any number of events to be sent to the activity
+        void onProfilePicClicked(User user);
+    }
+
+    // Store the listener (activity) that will have events fired once the fragment is attached
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        if (activity instanceof OnItemSelectedListener) {
+            listener = (OnItemSelectedListener) activity;
+        } else {
+            throw new ClassCastException(activity.toString()
+                    + " must implement PageFragment.OnItemSelectedListener");
+        }
     }
 }

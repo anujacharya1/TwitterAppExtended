@@ -22,7 +22,6 @@
         android:layout_height="match_parent"
         android:background="@android:color/white"
         android:layout_below="@+id/sliding_tabs" />
-
     <!--<android.support.v4.widget.SwipeRefreshLayout-->
         <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
         <!--android:id="@+id/swipeContainer"-->

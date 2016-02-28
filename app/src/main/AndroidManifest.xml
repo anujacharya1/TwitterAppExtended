@@ -47,6 +47,8 @@
         <activity android:name=".activities.TwitterActivity" />
 
         <activity android:name=".activities.TweetDetailActivity"/>
+
+        <activity android:name=".activities.ProfileActivity"/>
     </application>
 
 
